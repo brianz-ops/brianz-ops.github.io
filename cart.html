@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cart | Northstar Outfitters</title>
+<meta name="description" content="Northstar Outfitters analytics test website">
+<link rel="stylesheet" href="styles.css">
+
+<!-- ======================================================
+ ANALYTICS PLACEHOLDER
+ Option 1: paste a GTM container snippet here.
+ Option 2: use the GA4 gtag snippet below.
+ Replace G-XXXXXXXXXX and uncomment the script src/config lines.
+======================================================= -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXXXXX');
+</script>
+-->
+
+</head>
+<body>
+
+<div class="topbar"><div class="container">Free shipping on demo orders over $75 • GA4 implementation sandbox</div></div>
+<header class="site-header">
+  <div class="container header-main">
+    <a class="brand" href="index.html" data-track="logo_click">Northstar <span>Outfitters</span></a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html" data-track="nav_click">Home</a>
+      <div class="nav-dropdown">
+        <a href="shop.html" data-track="nav_click">Shop ▾</a>
+        <div class="nav-dropdown-menu">
+          <a href="shop.html?category=Backpacks" data-track="menu_category_click">Backpacks</a>
+          <a href="shop.html?category=Hydration" data-track="menu_category_click">Hydration</a>
+          <a href="shop.html?category=Apparel" data-track="menu_category_click">Apparel</a>
+          <a href="shop.html?category=Camping" data-track="menu_category_click">Camping</a>
+        </div>
+      </div>
+      <a href="about.html" data-track="nav_click">About</a>
+      <a href="contact.html" data-track="nav_click">Contact</a>
+      <a class="cart-link" href="cart.html" data-track="nav_cart_click">Cart <span class="cart-count">0</span></a>
+    </nav>
+  </div>
+</header>
+
+
+<main class="section">
+  <div class="container">
+    <div class="breadcrumbs"><a href="index.html">Home</a> / Cart</div>
+    <h1 style="font-size:40px">Your Cart</h1>
+    <div id="cartEmpty" class="notice hidden">Your cart is empty. <a href="shop.html">Continue shopping</a>.</div>
+    <div id="cartContent" class="hidden">
+      <table class="cart-table">
+        <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th></th></tr></thead>
+        <tbody id="cartRows"></tbody>
+      </table>
+      <div class="cart-summary">
+        <div class="summary-line"><span>Subtotal</span><strong id="subtotal">$0.00</strong></div>
+        <div class="summary-line"><span>Shipping</span><span>Calculated at checkout</span></div>
+        <div class="actions">
+          <a class="btn" href="checkout.html" id="checkoutLink">Checkout</a>
+          <a class="btn secondary" href="shop.html">Continue Shopping</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <div class="brand" style="color:white">Northstar <span>Outfitters</span></div>
+      <p>Demo ecommerce storefront built for analytics implementation and QA testing.</p>
+    </div>
+    <div>
+      <strong>Shop</strong>
+      <a href="shop.html">All Products</a>
+      <a href="shop.html?category=Backpacks">Backpacks</a>
+      <a href="shop.html?category=Apparel">Apparel</a>
+    </div>
+    <div>
+      <strong>Company</strong>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">© 2026 Northstar Outfitters. Demo site only.</div>
+</footer>
+
+<script src="app.js"></script>
+
+<script>
+function renderCart(){
+  const cart=getCart();
+  const empty=document.getElementById('cartEmpty');
+  const content=document.getElementById('cartContent');
+  if(!cart.length){empty.classList.remove('hidden');content.classList.add('hidden');return;}
+  empty.classList.add('hidden');content.classList.remove('hidden');
+  const rows=document.getElementById('cartRows'); rows.innerHTML='';
+  let subtotal=0;
+  cart.forEach(i=>{
+    const p=PRODUCTS[i.id]; subtotal+=p.price*i.qty;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${p.icon} <strong>${p.name}</strong><br><span class="small">${p.id}</span></td>
+      <td><input style="width:70px" type="number" min="1" max="10" value="${i.qty}" data-qty="${p.id}"></td>
+      <td>${money(p.price*i.qty)}</td>
+      <td><button class="btn danger" data-remove="${p.id}">Remove</button></td>`;
+    rows.appendChild(tr);
+  });
+  document.getElementById('subtotal').textContent=money(subtotal);
+
+  document.querySelectorAll('[data-remove]').forEach(btn=>btn.onclick=()=>{removeFromCart(btn.dataset.remove);renderCart();});
+  document.querySelectorAll('[data-qty]').forEach(inp=>inp.onchange=()=>{
+    const cart=getCart(); const item=cart.find(i=>i.id===inp.dataset.qty); item.qty=Math.max(1,parseInt(inp.value||'1',10)); saveCart(cart); renderCart();
+    trackEvent('update_cart_quantity',{item_id:item.id,quantity:item.qty});
+  });
+
+  const items=cart.map(i=>analyticsItem(PRODUCTS[i.id],i.qty));
+  trackEvent('view_cart',{currency:'USD',value:subtotal,items});
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  renderCart();
+  const link=document.getElementById('checkoutLink');
+  if(link) link.addEventListener('click',()=>trackEvent('begin_checkout_click',{cart_size:getCart().length}));
+});
+</script>
+
+</body>
+</html>

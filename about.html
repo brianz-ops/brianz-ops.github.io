@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About | Northstar Outfitters</title>
+<meta name="description" content="Northstar Outfitters analytics test website">
+<link rel="stylesheet" href="styles.css">
+
+<!-- ======================================================
+ ANALYTICS PLACEHOLDER
+ Option 1: paste a GTM container snippet here.
+ Option 2: use the GA4 gtag snippet below.
+ Replace G-XXXXXXXXXX and uncomment the script src/config lines.
+======================================================= -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXXXXX');
+</script>
+-->
+
+</head>
+<body>
+
+<div class="topbar"><div class="container">Free shipping on demo orders over $75 • GA4 implementation sandbox</div></div>
+<header class="site-header">
+  <div class="container header-main">
+    <a class="brand" href="index.html" data-track="logo_click">Northstar <span>Outfitters</span></a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html" data-track="nav_click">Home</a>
+      <div class="nav-dropdown">
+        <a href="shop.html" data-track="nav_click">Shop ▾</a>
+        <div class="nav-dropdown-menu">
+          <a href="shop.html?category=Backpacks" data-track="menu_category_click">Backpacks</a>
+          <a href="shop.html?category=Hydration" data-track="menu_category_click">Hydration</a>
+          <a href="shop.html?category=Apparel" data-track="menu_category_click">Apparel</a>
+          <a href="shop.html?category=Camping" data-track="menu_category_click">Camping</a>
+        </div>
+      </div>
+      <a href="about.html" data-track="nav_click">About</a>
+      <a href="contact.html" data-track="nav_click">Contact</a>
+      <a class="cart-link" href="cart.html" data-track="nav_cart_click">Cart <span class="cart-count">0</span></a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<section class="hero"><div class="container">
+  <div class="eyebrow">About Northstar</div>
+  <h1>Made for testing. Designed like a real site.</h1>
+  <p class="lead">Northstar Outfitters is a fictional brand created to provide realistic web journeys for analytics implementation, tagging, QA and training.</p>
+</div></section>
+<section class="section"><div class="container grid-3">
+  <div class="card"><div class="kpi">5+</div><p>Core page types</p></div>
+  <div class="card"><div class="kpi">10+</div><p>Trackable interaction types</p></div>
+  <div class="card"><div class="kpi">1</div><p>Complete ecommerce flow</p></div>
+</div></section>
+</main>
+
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <div class="brand" style="color:white">Northstar <span>Outfitters</span></div>
+      <p>Demo ecommerce storefront built for analytics implementation and QA testing.</p>
+    </div>
+    <div>
+      <strong>Shop</strong>
+      <a href="shop.html">All Products</a>
+      <a href="shop.html?category=Backpacks">Backpacks</a>
+      <a href="shop.html?category=Apparel">Apparel</a>
+    </div>
+    <div>
+      <strong>Company</strong>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">© 2026 Northstar Outfitters. Demo site only.</div>
+</footer>
+
+<script src="app.js"></script>
+
+</body>
+</html>

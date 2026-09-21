@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Northstar Trail Pack | Northstar Outfitters</title>
+<meta name="description" content="Northstar Outfitters analytics test website">
+<link rel="stylesheet" href="styles.css">
+
+<!-- ======================================================
+ ANALYTICS PLACEHOLDER
+ Option 1: paste a GTM container snippet here.
+ Option 2: use the GA4 gtag snippet below.
+ Replace G-XXXXXXXXXX and uncomment the script src/config lines.
+======================================================= -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXXXXX');
+</script>
+-->
+
+</head>
+<body>
+
+<div class="topbar"><div class="container">Free shipping on demo orders over $75 • GA4 implementation sandbox</div></div>
+<header class="site-header">
+  <div class="container header-main">
+    <a class="brand" href="index.html" data-track="logo_click">Northstar <span>Outfitters</span></a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html" data-track="nav_click">Home</a>
+      <div class="nav-dropdown">
+        <a href="shop.html" data-track="nav_click">Shop ▾</a>
+        <div class="nav-dropdown-menu">
+          <a href="shop.html?category=Backpacks" data-track="menu_category_click">Backpacks</a>
+          <a href="shop.html?category=Hydration" data-track="menu_category_click">Hydration</a>
+          <a href="shop.html?category=Apparel" data-track="menu_category_click">Apparel</a>
+          <a href="shop.html?category=Camping" data-track="menu_category_click">Camping</a>
+        </div>
+      </div>
+      <a href="about.html" data-track="nav_click">About</a>
+      <a href="contact.html" data-track="nav_click">Contact</a>
+      <a class="cart-link" href="cart.html" data-track="nav_cart_click">Cart <span class="cart-count">0</span></a>
+    </nav>
+  </div>
+</header>
+
+
+<main class="section">
+  <div class="container">
+    <div class="breadcrumbs"><a href="index.html">Home</a> / <a href="shop.html">Shop</a> / Northstar Trail Pack</div>
+    <div class="product-layout">
+      <div class="product-hero-art">🎒</div>
+      <div>
+        <span class="badge">Backpacks</span>
+        <h1 style="font-size:42px">Northstar Trail Pack</h1>
+        <p class="lead">A lightweight 22L pack with water-resistant fabric, padded straps and quick-access storage.</p>
+        <div class="price">$79.99</div>
+        <p class="small">SKU NSP-1001 • In stock</p>
+        <hr>
+        <label>Color</label>
+        <select id="colorSelect">
+          <option>Midnight Blue</option>
+          <option>Forest Green</option>
+          <option>Stone Gray</option>
+        </select>
+        <div class="qty-row">
+          <div>
+            <label>Quantity</label>
+            <input id="qty" type="number" min="1" max="5" value="1">
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="addDetailed">Add to Cart</button>
+          <a class="btn secondary" href="cart.html" data-track="view_cart_click">View Cart</a>
+        </div>
+        <div class="notice" style="margin-top:24px">
+          Analytics test points: <code>view_item</code>, variant selection, quantity, <code>add_to_cart</code>, and cart navigation.
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <div class="brand" style="color:white">Northstar <span>Outfitters</span></div>
+      <p>Demo ecommerce storefront built for analytics implementation and QA testing.</p>
+    </div>
+    <div>
+      <strong>Shop</strong>
+      <a href="shop.html">All Products</a>
+      <a href="shop.html?category=Backpacks">Backpacks</a>
+      <a href="shop.html?category=Apparel">Apparel</a>
+    </div>
+    <div>
+      <strong>Company</strong>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">© 2026 Northstar Outfitters. Demo site only.</div>
+</footer>
+
+<script src="app.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const p=PRODUCTS['NSP-1001'];
+  trackEvent('view_item',{currency:'USD',value:p.price,items:[analyticsItem(p)]});
+
+  document.getElementById('colorSelect').addEventListener('change',e=>{
+    trackEvent('select_item_variant',{item_id:p.id,variant:e.target.value});
+  });
+
+  document.getElementById('addDetailed').addEventListener('click',()=>{
+    const qty=Math.max(1,parseInt(document.getElementById('qty').value||'1',10));
+    addToCart(p.id,qty);
+    alert('Added to cart.');
+  });
+});
+</script>
+
+</body>
+</html>

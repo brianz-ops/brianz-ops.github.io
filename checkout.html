@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checkout | Northstar Outfitters</title>
+<meta name="description" content="Northstar Outfitters analytics test website">
+<link rel="stylesheet" href="styles.css">
+
+<!-- ======================================================
+ ANALYTICS PLACEHOLDER
+ Option 1: paste a GTM container snippet here.
+ Option 2: use the GA4 gtag snippet below.
+ Replace G-XXXXXXXXXX and uncomment the script src/config lines.
+======================================================= -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXXXXX');
+</script>
+-->
+
+</head>
+<body>
+
+<div class="topbar"><div class="container">Free shipping on demo orders over $75 • GA4 implementation sandbox</div></div>
+<header class="site-header">
+  <div class="container header-main">
+    <a class="brand" href="index.html" data-track="logo_click">Northstar <span>Outfitters</span></a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html" data-track="nav_click">Home</a>
+      <div class="nav-dropdown">
+        <a href="shop.html" data-track="nav_click">Shop ▾</a>
+        <div class="nav-dropdown-menu">
+          <a href="shop.html?category=Backpacks" data-track="menu_category_click">Backpacks</a>
+          <a href="shop.html?category=Hydration" data-track="menu_category_click">Hydration</a>
+          <a href="shop.html?category=Apparel" data-track="menu_category_click">Apparel</a>
+          <a href="shop.html?category=Camping" data-track="menu_category_click">Camping</a>
+        </div>
+      </div>
+      <a href="about.html" data-track="nav_click">About</a>
+      <a href="contact.html" data-track="nav_click">Contact</a>
+      <a class="cart-link" href="cart.html" data-track="nav_cart_click">Cart <span class="cart-count">0</span></a>
+    </nav>
+  </div>
+</header>
+
+
+<main class="section">
+  <div class="container">
+    <div class="breadcrumbs"><a href="index.html">Home</a> / <a href="cart.html">Cart</a> / Checkout</div>
+    <h1 style="font-size:40px">Checkout</h1>
+    <div class="product-layout">
+      <form id="checkoutForm">
+        <h2 style="font-size:24px">Shipping details</h2>
+        <div class="form-row">
+          <div><label>First name</label><input name="firstName" required></div>
+          <div><label>Last name</label><input name="lastName" required></div>
+        </div>
+        <label>Email</label><input type="email" name="email" required>
+        <label>Address</label><input name="address" required>
+        <div class="form-row">
+          <div><label>City</label><input name="city" required></div>
+          <div><label>State</label><select name="state" required><option value="">Select</option><option>IL</option><option>WI</option><option>IN</option><option>CA</option><option>NY</option></select></div>
+        </div>
+        <div class="form-row">
+          <div><label>ZIP</label><input name="zip" required pattern="[0-9]{5}"></div>
+          <div><label>Shipping</label><select id="shipping"><option value="0">Standard - Free</option><option value="12.99">Express - $12.99</option></select></div>
+        </div>
+
+        <h2 style="font-size:24px;margin-top:28px">Payment</h2>
+        <label>Card number</label><input required inputmode="numeric" placeholder="4242 4242 4242 4242">
+        <div class="form-row">
+          <div><label>Expiration</label><input required placeholder="12/29"></div>
+          <div><label>CVV</label><input required placeholder="123"></div>
+        </div>
+        <p class="small">Demo only. Payment data is not transmitted anywhere.</p>
+        <button class="btn" type="submit">Place Order</button>
+      </form>
+
+      <div class="card">
+        <h2 style="font-size:24px">Order summary</h2>
+        <div id="checkoutItems"></div>
+        <hr>
+        <div class="summary-line"><span>Subtotal</span><span id="coSubtotal">$0.00</span></div>
+        <div class="summary-line"><span>Shipping</span><span id="coShipping">$0.00</span></div>
+        <div class="summary-line total"><span>Total</span><span id="coTotal">$0.00</span></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <div class="brand" style="color:white">Northstar <span>Outfitters</span></div>
+      <p>Demo ecommerce storefront built for analytics implementation and QA testing.</p>
+    </div>
+    <div>
+      <strong>Shop</strong>
+      <a href="shop.html">All Products</a>
+      <a href="shop.html?category=Backpacks">Backpacks</a>
+      <a href="shop.html?category=Apparel">Apparel</a>
+    </div>
+    <div>
+      <strong>Company</strong>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">© 2026 Northstar Outfitters. Demo site only.</div>
+</footer>
+
+<script src="app.js"></script>
+
+<script>
+let checkoutSubtotal=0;
+
+function renderCheckout(){
+  const cart=getCart();
+  if(!cart.length){ location.href='cart.html'; return; }
+  const box=document.getElementById('checkoutItems');
+  box.innerHTML=''; checkoutSubtotal=0;
+  cart.forEach(i=>{
+    const p=PRODUCTS[i.id];
+    checkoutSubtotal += p.price*i.qty;
+    box.innerHTML += `<div class="summary-line"><span>${p.name} × ${i.qty}</span><span>${money(p.price*i.qty)}</span></div>`;
+  });
+  updateTotal();
+  trackEvent('begin_checkout',{
+    currency:'USD',
+    value:checkoutSubtotal,
+    items:cart.map(i=>analyticsItem(PRODUCTS[i.id],i.qty))
+  });
+}
+function updateTotal(){
+  const shipping=Number(document.getElementById('shipping').value||0);
+  document.getElementById('coSubtotal').textContent=money(checkoutSubtotal);
+  document.getElementById('coShipping').textContent=money(shipping);
+  document.getElementById('coTotal').textContent=money(checkoutSubtotal+shipping);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  renderCheckout();
+  document.getElementById('shipping').addEventListener('change',e=>{
+    updateTotal();
+    trackEvent('add_shipping_info',{shipping_tier:e.target.options[e.target.selectedIndex].text});
+  });
+
+  document.getElementById('checkoutForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    if(!e.target.reportValidity()) return;
+    const cart=getCart();
+    const shipping=Number(document.getElementById('shipping').value||0);
+    const order={
+      transaction_id:'NS-'+Date.now(),
+      subtotal:checkoutSubtotal,
+      shipping:shipping,
+      total:checkoutSubtotal+shipping,
+      items:cart.map(i=>({...analyticsItem(PRODUCTS[i.id],i.qty)}))
+    };
+    sessionStorage.setItem('lastOrder',JSON.stringify(order));
+    trackEvent('add_payment_info',{payment_type:'demo_card',currency:'USD',value:order.total,items:order.items});
+    location.href='thank-you.html';
+  });
+});
+</script>
+
+</body>
+</html>
